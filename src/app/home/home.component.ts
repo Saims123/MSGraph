@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -8,19 +9,21 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
 isAuth: boolean;
 user: any;
-  constructor() { }
+  constructor(public authService: AuthService) { }
 
   ngOnInit() {
-    this.isAuth = false;
-    this.user = {};
   }
 
-  signIn(): void {
-      this.isAuth = true;
-      this.user = {
-        displayName: 'User',
-        email: 'stevesim@hotmail.com'
-      };
+  async signIn(): Promise<void> {
+    await this.authService.signIn();
+    if (this.authService.isAuth) {
+      let token = await this.authService.getAccessToken();
+    }
+  }
+
+
+  signOut() {
+    this.authService.signOut();
   }
 
 }
